@@ -35,45 +35,12 @@ try {
         throw "実行をキャンセルしました。";
     }
 
-    // 1 :「そのワードでSplit」するタイプ、
-    // 2 :「ワードが登場すると、ワードを含めて次のファイル」にするタイプ、
-    // 3 :「ワードが登場すると、そのワードまでをファイルとし、次の文字から次のファイルとする」タイプ
-    function getDivideType() {
-        // ２番目の引数として分割タイプが外部から指定されているなら、数値に直して
-        let answer = getarg(1);
-        if (answer != "") {
-            let nDivideType = Number(answer);
-            if (Number.isNaN(nDivideType)) {
-                throwInvalidDivideType();
-            }
-            if (1 <= nDivideType && nDivideType <= 3) {
-                ; // 問題なし
-            } else {
-                throwInvalidDivideType();
-            }
-        }
-
-        answer = "1";
-        if (answer=="") { throwCancelException(); }
-
-        let nDivideType = Number(answer);
-        if (Number.isNaN(nDivideType)) {
-            throwInvalidDivideType();
-        }
-        if (1 <= nDivideType && nDivideType <= 3) {
-            ; // 問題なし
-        } else {
-            throwInvalidDivideType();
-        }
-
-        return nDivideType;
-    }
-
-
     function getPerChunk() {
 
         // このマクロの引数として行数が指定されている。
-        let answer = getarg(0);
+        let json_text = getarg(0);
+        let json_obj = JSON.parse(json_text);
+        let answer = json_obj.strSearchRegexp;
 
         deletecolormarkerall(findmarker());
         gofiletop();
@@ -108,6 +75,8 @@ try {
             let items = info.items;
             return items;
         } else {
+		    // 情報は取得したので検索マーカー全て消す。
+		    deletecolormarkerall(findmarker());
             throw "分離情報取得でエラーが発生しました。";
         }
     }
@@ -118,9 +87,15 @@ try {
 
 	    // 何行に分割するかを得る
 	    gColorMarkerItems = getPerChunk();
-
-        hidemaru.postExecMacroFile( currentmacrodirectory() + "\\" + "HmSplitTextFileByRegex.divide.mac" );
-
+        // マクロ引数が直接渡されてるいるようならUIは不要
+        if (getarg(0) != "") {
+	        let json_text = getarg(0);
+	        let json_obj = JSON.parse(json_text);
+            let divtype = json_obj.nDivisionType;
+            hidemaru.postExecMacroFile( currentmacrodirectory() + "\\" + "HmSplitTextFileByRegex.post.mac", divtype );
+        } else {
+            hidemaru.postExecMacroFile( currentmacrodirectory() + "\\" + "HmSplitTextFileByRegex.divide.mac" );
+        }
     }
 
     main()
