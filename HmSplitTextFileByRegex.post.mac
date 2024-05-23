@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.5.0
+ * HmSplitTextFileByRegex v1.0.5.2
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -94,15 +94,14 @@ function postProcedure_HmSplitTextFileByRegex(nDivideType) {
 
         // ワード登場するまでが前のファイルとなるタイプ③なのであれば、(col2,line2)までを採用し、次は(col2, line2)からとなる。
         else if (nDivideType == 3) {
-
             for (let item of items) {
 
                 let text = gettext_wcs(prevCol, prevLine, item.col2, item.line2, 1);
 
                 chunks.push(text);
 
-                prevCol = item.col12
-                prevLine = item.line12
+                prevCol = item.col2
+                prevLine = item.line2
             }
             let text = gettext_wcs(prevCol, prevLine, bottom_len + 1, linecount2() + 1, 1);
             chunks.push(text);
