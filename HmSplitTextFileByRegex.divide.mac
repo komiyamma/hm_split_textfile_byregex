@@ -1,0 +1,119 @@
+﻿jsmode "WebView2";
+js {
+
+// 最初のレンダリングペインCompleteチェック用のものは、比較的細やかにチェックする。
+// これは表示しをえたら直ぐにIntervalが止まるのでIntervalが小さくでも大丈夫
+var idIntervalDivideInit_HmSplitTextFileByRegex;
+
+// ラベルはこのマクロ独自にしておく
+let strTargetLabel_HmSplitTextFileByRegex = "HmSplitTextFileByRegex";
+
+const currentmacrodir_HmSplitTextFileByRegex = currentmacrodirectory();
+
+// HTML側で「ボタン」を押すと、これが呼ばれる
+function onInputHtmlButtonClick_HmSplitTextFileByRegex(json_text) {
+    try {
+	    hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
+	    renderpanecommand({
+	        target: strTargetLabel_HmSplitTextFileByRegex,
+	        show: 0,
+	    });
+
+	    // json_textの状態で、inputフィールドに入っているテキストが渡ってくるので、その数値を渡す
+	    let json_obj = JSON.parse(json_text);
+	    let divtype = json_obj.divtype;
+	    console.log("divtype" + divtype);
+	    hidemaru.postExecMacroFile( currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.post.mac", divtype );
+    } catch(err) {
+	    // 情報は取得したので検索マーカー全て消す。
+	    deletecolormarkerall(findmarker());
+	    outputAlert(err);
+    }
+}
+
+try {
+    function outputAlert(err) {
+        let dll = loaddll("HmOutputPane.dll");
+        dll.dllFunc.Output(hidemaru.getCurrentWindowHandle(), err + "\r\n");
+    }
+
+    function throwIfNotFileName() {
+        // ファイル名無しは対象にしない
+        if (!hidemaru.getFileFullPath()) {
+            outputAlert("ファイル名が付いているファイルのみ対象とします。");
+            throwCancelException();
+        }
+    }
+
+    function throwInvalidDivideType() {
+	    // 情報は取得したので検索マーカー全て消す。
+	    deletecolormarkerall(findmarker());
+        throw "指定の分割方法は適切な数値ではありません。"
+    }
+
+    function throwCancelException() {
+	    // 情報は取得したので検索マーカー全て消す。
+	    deletecolormarkerall(findmarker());
+        throw "実行をキャンセルしました。";
+    }
+
+    // レンダリングペインを開く
+    function openRenderPane_HmSplitTextFileByRegex() {
+
+        let nDivFileCount = gColorMarkerItems.length; // 予測値に使うだけ。
+
+        // カレントマクロフォルダのhtmlファイルを使う
+        let absoluteUrl = new URL(currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.divide.html").href;
+        absoluteUrl += "?strDivFileCount=" + nDivFileCount;
+
+        let idCallback = hidemaru.getFunctionId(onInputHtmlButtonClick_HmSplitTextFileByRegex);
+        absoluteUrl += "&&strIDCallBack=" + idCallback;
+
+        const json_arg = {
+            target: strTargetLabel_HmSplitTextFileByRegex,
+            uri: absoluteUrl,
+            show: 1,
+            place: "leftside",
+        };
+
+        renderpanecommand(json_arg);
+    }
+
+    // 本当にレンダリングペインが開いて準備がととのったのかのチェック
+    let checkCount_HmSplitTextFileByRegex = 0;
+    function checkComplete_HmSplitTextFileByRegex() {
+        let readyState = renderpanecommand({ target: strTargetLabel_HmSplitTextFileByRegex, get: "readyState" });
+        if (readyState == "complete") {
+            hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
+            onRenderPaneShown_HmSplitTextFileByRegex();
+        }
+    }
+
+
+    // レンダリングペインが完全に表示されたら、
+    // このJS内にある「onInputHtmlButtonClick_HmSplitTextFileByRegex」関数をレンダリングペインから呼び出せるように関数のIDを渡す。
+    // また、「レンダリングペインを操作するのよ～」ということがわかりやすいように、レンダリングペイン側にフォーカスを移す
+    function onRenderPaneShown_HmSplitTextFileByRegex() {
+        renderpanecommand({
+            target: strTargetLabel_HmSplitTextFileByRegex,
+            focus: 1,
+        });
+    }
+
+
+    openRenderPane_HmSplitTextFileByRegex();
+
+    // 次のマクロ実行の際に見るのでletではなくvarにして、ライフサイクルを js { } 外に伸ばす必要がある。
+    // 他のjsを使った秀丸マクロと決して被らない「マクロ空間」にしておく必要がある。(よってtickcount空間という被らない空間に配置している)
+    if (typeof (idIntervalDivideInit_HmSplitTextFileByRegex) != "undefined") {
+        hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
+    }
+    idIntervalDivideInit_HmSplitTextFileByRegex = hidemaru.setInterval(checkComplete_HmSplitTextFileByRegex, 300);
+} catch(err) {
+    // 情報は取得したので検索マーカー全て消す。
+    deletecolormarkerall(findmarker());
+    outputAlert(err);
+}
+
+
+} // js
