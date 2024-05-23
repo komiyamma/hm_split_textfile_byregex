@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.5.2
+ * HmSplitTextFileByRegex v1.0.5.3
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -48,6 +48,14 @@ try {
         }
 
         deletecolormarkerall(findmarker());
+
+        let selectedText = hidemaru.getSelectedText();
+        if (!selectedText) {
+            selectedText = "分離したい箇所の「単語」や「正規表現」を入力";
+        }
+        // 選択テキストを得たので、選択解除
+        escapeselect();
+        // ファイルのトップに行く前に選択を解除しておく必要あり（そうでないと選択したままgofiletopすると先頭から選択してしまう)
         gofiletop();
         const op_casesense = 0x00000002; // 秀丸のsearchdown関数のcasesenseと同じ意味
         const op_regular = 0x00000010; // 秀丸のsearchdown関数のregularと同じ意味
@@ -56,7 +64,7 @@ try {
 
         // 指定がないなら視覚的にもダイアログを出す
         if (answer == "") {
-            let success = searchdialog("分離したい箇所のパターンの正規表現の入力", op_regular | op_hilight | op_casesense | op_loop);
+            let success = searchdialog(selectedText, op_regular | op_hilight | op_casesense | op_loop);
             if (!success) { throw "検索に失敗しました"; }
             if (success==-2) { throwCancelException(); }
 
