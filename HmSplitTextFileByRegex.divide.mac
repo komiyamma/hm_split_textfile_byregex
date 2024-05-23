@@ -22,7 +22,7 @@ function onInputHtmlButtonClick_HmSplitTextFileByRegex(json_text) {
         // json_textの状態で、inputフィールドに入っているテキストが渡ってくるので、その数値を渡す
         let json_obj = JSON.parse(json_text);
         let divtype = json_obj.divtype;
-        console.log("divtype" + divtype);
+        // console.log("divtype" + divtype);
         hidemaru.postExecMacroFile( currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.post.mac", divtype );
     } catch(err) {
         // 情報は取得したので検索マーカー全て消す。
