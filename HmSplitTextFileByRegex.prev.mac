@@ -37,10 +37,15 @@ try {
 
     function getPerChunk() {
 
-        // このマクロの引数として行数が指定されている。
-        let json_text = getarg(0);
-        let json_obj = JSON.parse(json_text);
-        let answer = json_obj.strSearchRegexp;
+        let answer = ""
+
+        // このマクロが引数付で呼ばれているならば
+        if (getarg(0) != "") {
+            // このマクロの引数として行数が指定されている。
+            let json_text = getarg(0);
+            let json_obj = JSON.parse(json_text);
+            answer = json_obj.strSearchRegexp;
+        }
 
         deletecolormarkerall(findmarker());
         gofiletop();
@@ -75,8 +80,8 @@ try {
             let items = info.items;
             return items;
         } else {
-		    // 情報は取得したので検索マーカー全て消す。
-		    deletecolormarkerall(findmarker());
+            // 情報は取得したので検索マーカー全て消す。
+            deletecolormarkerall(findmarker());
             throw "分離情報取得でエラーが発生しました。";
         }
     }
@@ -85,12 +90,12 @@ try {
 
         throwIfNotFileName();
 
-	    // 何行に分割するかを得る
-	    gColorMarkerItems = getPerChunk();
+        // 何行に分割するかを得る
+        gColorMarkerItems = getPerChunk();
         // マクロ引数が直接渡されてるいるようならUIは不要
         if (getarg(0) != "") {
-	        let json_text = getarg(0);
-	        let json_obj = JSON.parse(json_text);
+            let json_text = getarg(0);
+            let json_obj = JSON.parse(json_text);
             let divtype = json_obj.nDivisionType;
             hidemaru.postExecMacroFile( currentmacrodirectory() + "\\" + "HmSplitTextFileByRegex.post.mac", divtype );
         } else {
