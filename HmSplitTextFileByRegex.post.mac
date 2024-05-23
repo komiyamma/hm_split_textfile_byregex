@@ -43,14 +43,14 @@ function postProcedure_HmSplitTextFileByRegex(nDivideType) {
     }
 
     function throwInvalidDivideType() {
-	    // 情報は取得したので検索マーカー全て消す。
-	    deletecolormarkerall(findmarker());
+        // 情報は取得したので検索マーカー全て消す。
+        deletecolormarkerall(findmarker());
         throw "指定の分割方法は適切な数値ではありません。"
     }
 
     function throwCancelException() {
-	    // 情報は取得したので検索マーカー全て消す。
-	    deletecolormarkerall(findmarker());
+        // 情報は取得したので検索マーカー全て消す。
+        deletecolormarkerall(findmarker());
         throw "実行をキャンセルしました。";
     }
 
@@ -167,12 +167,12 @@ function postProcedure_HmSplitTextFileByRegex(nDivideType) {
         saveChunksToFiles(chunks);
         // console.log(chunks.join("\r\n---------\r\n"));
 
-	    // 情報は取得したので検索マーカー全て消す。
-	    deletecolormarkerall(findmarker());
+        // 情報は取得したので検索マーカー全て消す。
+        deletecolormarkerall(findmarker());
         outputAlert(chunks.length + "個のファイルに分割しました。");
     } catch (err) {
-	    // 情報は取得したので検索マーカー全て消す。
-	    deletecolormarkerall(findmarker());
+        // 情報は取得したので検索マーカー全て消す。
+        deletecolormarkerall(findmarker());
         outputAlert(err);
     }
 }

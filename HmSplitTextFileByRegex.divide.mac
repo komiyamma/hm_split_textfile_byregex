@@ -13,21 +13,21 @@ const currentmacrodir_HmSplitTextFileByRegex = currentmacrodirectory();
 // HTML側で「ボタン」を押すと、これが呼ばれる
 function onInputHtmlButtonClick_HmSplitTextFileByRegex(json_text) {
     try {
-	    hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
-	    renderpanecommand({
-	        target: strTargetLabel_HmSplitTextFileByRegex,
-	        show: 0,
-	    });
+        hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
+        renderpanecommand({
+            target: strTargetLabel_HmSplitTextFileByRegex,
+            show: 0,
+        });
 
-	    // json_textの状態で、inputフィールドに入っているテキストが渡ってくるので、その数値を渡す
-	    let json_obj = JSON.parse(json_text);
-	    let divtype = json_obj.divtype;
-	    console.log("divtype" + divtype);
-	    hidemaru.postExecMacroFile( currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.post.mac", divtype );
+        // json_textの状態で、inputフィールドに入っているテキストが渡ってくるので、その数値を渡す
+        let json_obj = JSON.parse(json_text);
+        let divtype = json_obj.divtype;
+        console.log("divtype" + divtype);
+        hidemaru.postExecMacroFile( currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.post.mac", divtype );
     } catch(err) {
-	    // 情報は取得したので検索マーカー全て消す。
-	    deletecolormarkerall(findmarker());
-	    outputAlert(err);
+        // 情報は取得したので検索マーカー全て消す。
+        deletecolormarkerall(findmarker());
+        outputAlert(err);
     }
 }
 
@@ -46,14 +46,14 @@ try {
     }
 
     function throwInvalidDivideType() {
-	    // 情報は取得したので検索マーカー全て消す。
-	    deletecolormarkerall(findmarker());
+        // 情報は取得したので検索マーカー全て消す。
+        deletecolormarkerall(findmarker());
         throw "指定の分割方法は適切な数値ではありません。"
     }
 
     function throwCancelException() {
-	    // 情報は取得したので検索マーカー全て消す。
-	    deletecolormarkerall(findmarker());
+        // 情報は取得したので検索マーカー全て消す。
+        deletecolormarkerall(findmarker());
         throw "実行をキャンセルしました。";
     }
 

@@ -28,11 +28,11 @@
     let idCallback=0;
     let strDivFileCount = "";
 
-    // 現在のURLを取得
-    var url = new URL(window.location.href);
-    // パラメータを取得
-    var params = new URLSearchParams(url.search);
-    strDivFileCount = params.get('strDivFileCount');
+	// 現在のURLを取得
+	var url = new URL(window.location.href);
+	// パラメータを取得
+	var params = new URLSearchParams(url.search);
+	strDivFileCount = params.get('strDivFileCount');
     let strIDCallBack = params.get('strIDCallBack');
     idCallback = Number(strIDCallBack);
 
@@ -41,17 +41,17 @@
     btn_1.addEventListener("click", () => {
             // window.alert("btn1");
         try {
-            let message_obj = {
-                divtype: 1
-            };
-            let json_text = JSON.stringify(message_obj);
-            if (idCallback > 0) {
+	        let message_obj = {
+	            divtype: 1
+	        };
+	        let json_text = JSON.stringify(message_obj);
+	        if (idCallback > 0) {
                // window.alert("idCallback1");
                // window.alert(idCallback);
-                window.chrome.webview.postMessage({funcid:idCallback, message:json_text});
-            } else {
+	            window.chrome.webview.postMessage({funcid:idCallback, message:json_text});
+	        } else {
                 // window.alert("idCallBack is 0");
-            }
+	        }
         } catch(err) {
                 // window.alert(err.toString());
         }
@@ -59,16 +59,16 @@
     btn_2.addEventListener("click", () => {
         try {
             // window.alert("btn2");
-            let message_obj = {
-                divtype: 2
-            };
-            let json_text = JSON.stringify(message_obj);
-            if (idCallback > 0) {
+	        let message_obj = {
+	            divtype: 2
+	        };
+	        let json_text = JSON.stringify(message_obj);
+	        if (idCallback > 0) {
                // window.alert("idCallback2");
-                window.chrome.webview.postMessage({funcid:idCallback, message:json_text});
-            } else {
+	            window.chrome.webview.postMessage({funcid:idCallback, message:json_text});
+	        } else {
                 // window.alert("idCallBack is 0");
-            }
+	        }
         } catch(err) {
                 // window.alert(err.toString());
         }
@@ -76,16 +76,16 @@
     btn_3.addEventListener("click", () => {
         try {
             // window.alert("btn2");
-            let message_obj = {
-                divtype: 3
-            };
-            let json_text = JSON.stringify(message_obj);
-            if (idCallback > 0) {
+	        let message_obj = {
+	            divtype: 3
+	        };
+	        let json_text = JSON.stringify(message_obj);
+	        if (idCallback > 0) {
                // window.alert("idCallback3");
-                window.chrome.webview.postMessage({funcid:idCallback, message:json_text});
-            } else {
+	            window.chrome.webview.postMessage({funcid:idCallback, message:json_text});
+	        } else {
                 // window.alert("idCallBack is 0");
-            }
+	        }
         } catch(err) {
                 // window.alert(err.toString());
         }
