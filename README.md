@@ -10,8 +10,14 @@
 
 ## 使い方
 
+### HmSplitTextFileByRegex.ui.mac
+
 分割したいテキストファイルを秀丸で開く  
 HmSplitTextFileByRegex.ui.mac を 実行する。  
 「分割の印」となる「ワード」なり「正規表現」なりを入力。
 分割タイプを選ぶ。
 ⇒ 自動で 「ファイル名_001.txt」「ファイル名_002.txt」... といったように連番で分割される。  
+
+### HmSplitTextFileByRegex.value.mac
+
+- UIなしで直接値で指示する時はこれを編集して自分なりに利用してください。
