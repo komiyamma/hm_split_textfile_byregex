@@ -1,19 +1,26 @@
 ﻿jsmode "WebView2";
 js {
-
 // 最初のレンダリングペインCompleteチェック用のものは、比較的細やかにチェックする。
 // これは表示しをえたら直ぐにIntervalが止まるのでIntervalが小さくでも大丈夫
-var idIntervalDivideInit_HmSplitTextFileByRegex;
+var idIntervalDivideInit_HmSplitTextFileByRegex; // 最初のレンダー表示用
+
+var idIntervalDivideUpdate_HmSplitTextFileByRegex; // 途中閉じてるんじぇね？の監視用
 
 // ラベルはこのマクロ独自にしておく
 let strTargetLabel_HmSplitTextFileByRegex = "HmSplitTextFileByRegex";
 
 const currentmacrodir_HmSplitTextFileByRegex = currentmacrodirectory();
 
+function postDeleteColorMarkerAll_HmSplitTextFileByRegex() {
+    // 情報は取得したので検索マーカー全て消す。
+    hidemaru.postExecMacroMemory( "deletecolormarkerall findmarker" );
+}
+
 // HTML側で「ボタン」を押すと、これが呼ばれる
 function onInputHtmlButtonClick_HmSplitTextFileByRegex(json_text) {
     try {
         hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
+        hidemaru.clearInterval(idIntervalDivideUpdate_HmSplitTextFileByRegex);
         renderpanecommand({
             target: strTargetLabel_HmSplitTextFileByRegex,
             show: 0,
@@ -25,9 +32,8 @@ function onInputHtmlButtonClick_HmSplitTextFileByRegex(json_text) {
         // console.log("divtype" + divtype);
         hidemaru.postExecMacroFile( currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.post.mac", divtype );
     } catch(err) {
-        // 情報は取得したので検索マーカー全て消す。
-        deletecolormarkerall(findmarker());
         outputAlert(err);
+        postDeleteColorMarkerAll_HmSplitTextFileByRegex();
     }
 }
 
@@ -46,21 +52,37 @@ try {
     }
 
     function throwInvalidDivideType() {
-        // 情報は取得したので検索マーカー全て消す。
-        deletecolormarkerall(findmarker());
         throw "指定の分割方法は適切な数値ではありません。"
     }
 
     function throwCancelException() {
-        // 情報は取得したので検索マーカー全て消す。
-        deletecolormarkerall(findmarker());
         throw "実行をキャンセルしました。";
+    }
+
+    // 概ねどのタイプを選んでもこの辺の数値になるんじぁね？ という数値
+    function expectedFileCount(items) {
+        let count = 0;
+        let prevCol = 0;
+        let prevLine = 1;
+       
+        for (let item of items) {
+            console.log(`${prevCol}, ${item.col1}, ${prevLine}, ${item.line1}\r\n`);
+            // 今の項目の開始地点と、前の項目の最終地点が同じなら、それはから
+            if (prevCol == item.col1 && prevLine == item.line1) {
+                ;
+            } else {
+                count++;
+            }
+            prevCol = item.col2;
+            prevLine = item.line2;
+        }
+        return count;
     }
 
     // レンダリングペインを開く
     function openRenderPane_HmSplitTextFileByRegex() {
 
-        let nDivFileCount = gColorMarkerItems.length; // 予測値に使うだけ。
+        let nDivFileCount = expectedFileCount(gColorMarkerItems); // 予測値に使うだけ。
 
         // カレントマクロフォルダのhtmlファイルを使う
         let absoluteUrl = new URL(currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.divide.html").href;
@@ -89,7 +111,6 @@ try {
         }
     }
 
-
     // レンダリングペインが完全に表示されたら、
     // このJS内にある「onInputHtmlButtonClick_HmSplitTextFileByRegex」関数をレンダリングペインから呼び出せるように関数のIDを渡す。
     // また、「レンダリングペインを操作するのよ～」ということがわかりやすいように、レンダリングペイン側にフォーカスを移す
@@ -100,8 +121,17 @@ try {
         });
     }
 
-
     openRenderPane_HmSplitTextFileByRegex();
+
+    // 途中で閉じちゃってたら、終了
+    function updateTextInfo_HmSplitTextFileByLine() {
+        let isShowNow = renderpanecommand({ target: strTargetLabel_HmSplitTextFileByRegex, get: "show" });
+        if (isShowNow == "0") {
+            hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
+            hidemaru.clearInterval(idIntervalDivideUpdate_HmSplitTextFileByRegex);
+            postDeleteColorMarkerAll_HmSplitTextFileByRegex();
+        }
+    }
 
     // 次のマクロ実行の際に見るのでletではなくvarにして、ライフサイクルを js { } 外に伸ばす必要がある。
     // 他のjsを使った秀丸マクロと決して被らない「マクロ空間」にしておく必要がある。(よってtickcount空間という被らない空間に配置している)
@@ -109,10 +139,16 @@ try {
         hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
     }
     idIntervalDivideInit_HmSplitTextFileByRegex = hidemaru.setInterval(checkComplete_HmSplitTextFileByRegex, 300);
+
+    // 途中で閉じちゃってるんじゃね？という監視用。閉じたらキャンセルの意思とみなす。
+    if (typeof (idIntervalDivideUpdate_HmSplitTextFileByRegex) != "undefined") {
+        hidemaru.clearInterval(idIntervalDivideUpdate_HmSplitTextFileByRegex);
+    }
+    idIntervalDivideUpdate_HmSplitTextFileByRegex = hidemaru.setInterval(updateTextInfo_HmSplitTextFileByLine, 1000);
+
 } catch(err) {
-    // 情報は取得したので検索マーカー全て消す。
-    deletecolormarkerall(findmarker());
     outputAlert(err);
+    postDeleteColorMarkerAll_HmSplitTextFileByRegex();
 }
 
 
