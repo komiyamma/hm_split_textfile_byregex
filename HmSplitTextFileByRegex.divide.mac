@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.5.5
+ * HmSplitTextFileByRegex v1.0.5.6
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -26,15 +26,21 @@ function postDeleteColorMarkerAll_HmSplitTextFileByRegex() {
     hidemaru.postExecMacroMemory( "deletecolormarkerall findmarker" );
 }
 
+function closeRenderPaneCommand_HmSplitTextFileByRegex() {
+    renderpanecommand({
+        target: strTargetLabel_HmSplitTextFileByRegex,
+        show: 0,
+    });
+}
+
+
 // HTML側で「ボタン」を押すと、これが呼ばれる
 function onInputHtmlButtonClick_HmSplitTextFileByRegex(json_text) {
     try {
         hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
         hidemaru.clearInterval(idIntervalDivideUpdate_HmSplitTextFileByRegex);
-        renderpanecommand({
-            target: strTargetLabel_HmSplitTextFileByRegex,
-            show: 0,
-        });
+        // レンダーペインコマンドを閉じる
+        closeRenderPaneCommand_HmSplitTextFileByRegex();
 
         // json_textの状態で、inputフィールドに入っているテキストが渡ってくるので、その数値を渡す
         let json_obj = JSON.parse(json_text);
@@ -158,6 +164,7 @@ try {
 
 } catch(err) {
     outputAlert(err);
+    closeRenderPaneCommand_HmSplitTextFileByRegex();
     postDeleteColorMarkerAll_HmSplitTextFileByRegex();
 }
 

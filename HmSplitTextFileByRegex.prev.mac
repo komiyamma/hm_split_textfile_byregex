@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.5.5
+ * HmSplitTextFileByRegex v1.0.5.6
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -33,6 +33,15 @@ try {
 
     function throwCancelException() {
         throw "実行をキャンセルしました。";
+    }
+
+    function closeRenderPaneCommand_HmSplitTextFileByRegex() {
+        // ラベルはこのマクロ独自にしておく
+        let strTargetLabel = "HmSplitTextFileByRegex";
+        renderpanecommand({
+            target: strTargetLabel,
+            show: 0,
+        });
     }
 
     function getPerChunk() {
@@ -115,6 +124,7 @@ try {
 
 } catch (err) {
     outputAlert(err);
+    closeRenderPaneCommand_HmSplitTextFileByRegex();
 }
 
 } // js
