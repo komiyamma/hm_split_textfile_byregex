@@ -76,14 +76,14 @@ try {
     }
 
     // 概ねどのタイプを選んでもこの辺の数値になるんじぁね？ という数値
-    function expectedFileCount(items) {
+    function expectedFileCount_HmSplitTextFileByRegex(items) {
         let count = 0;
         let prevCol = 0;
         let prevLine = 1;
        
         for (let item of items) {
             console.log(`${prevCol}, ${item.col1}, ${prevLine}, ${item.line1}\r\n`);
-            // 今の項目の開始地点と、前の項目の最終地点が同じなら、それはから
+            // 今の項目の開始地点と、前の項目の最終地点が同じなら、それは空ファイル予定なのでカウントなし
             if (prevCol == item.col1 && prevLine == item.line1) {
                 ;
             } else {
@@ -98,14 +98,19 @@ try {
     // レンダリングペインを開く
     function openRenderPane_HmSplitTextFileByRegex() {
 
-        let nDivFileCount = expectedFileCount(gColorMarkerItems); // 予測値に使うだけ。
+        let absoluteUrl = new URL(currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.divide.html");
+
+        let nDivFileCount = expectedFileCount_HmSplitTextFileByRegex(gColorMarkerItems); // 予測値に使うだけ。
 
         // カレントマクロフォルダのhtmlファイルを使う
-        let absoluteUrl = new URL(currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.divide.html").href;
-        absoluteUrl += "?strDivFileCount=" + nDivFileCount;
-
         let idCallback = hidemaru.getFunctionId(onInputHtmlButtonClick_HmSplitTextFileByRegex);
-        absoluteUrl += "&&strIDCallBack=" + idCallback;
+
+        let params = {
+            strIDCallBack: idCallback,
+            strDivFileCount: nDivFileCount
+        };
+        absoluteUrl.search = new URLSearchParams(params).toString();
+        absoluteUrl = absoluteUrl.href; // オブジェクトから実際のUrl文字列へ
 
         const json_arg = {
             target: strTargetLabel_HmSplitTextFileByRegex,
