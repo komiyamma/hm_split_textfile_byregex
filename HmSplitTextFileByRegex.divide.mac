@@ -16,44 +16,13 @@ var idIntervalDivideInit_HmSplitTextFileByRegex; // 最初のレンダー表示�
 
 var idIntervalDivideUpdate_HmSplitTextFileByRegex; // 途中閉じてるんじぇね？の監視用
 
-// ラベルはこのマクロ独自にしておく
-let strTargetLabel_HmSplitTextFileByRegex = "HmSplitTextFileByRegex";
-
-const currentmacrodir_HmSplitTextFileByRegex = currentmacrodirectory();
-
-function postDeleteColorMarkerAll_HmSplitTextFileByRegex() {
-    // 情報は取得したので検索マーカー全て消す。
-    hidemaru.postExecMacroMemory( "deletecolormarkerall findmarker" );
-}
-
-function closeRenderPaneCommand_HmSplitTextFileByRegex() {
-    renderpanecommand({
-        target: strTargetLabel_HmSplitTextFileByRegex,
-        show: 0,
-    });
-}
-
-
-// HTML側で「ボタン」を押すと、これが呼ばれる
-function onInputHtmlButtonClick_HmSplitTextFileByRegex(json_text) {
-    try {
-        hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
-        hidemaru.clearInterval(idIntervalDivideUpdate_HmSplitTextFileByRegex);
-        // レンダーペインコマンドを閉じる
-        closeRenderPaneCommand_HmSplitTextFileByRegex();
-
-        // json_textの状態で、inputフィールドに入っているテキストが渡ってくるので、その数値を渡す
-        let json_obj = JSON.parse(json_text);
-        let divtype = json_obj.divtype;
-        // console.log("divtype" + divtype);
-        hidemaru.postExecMacroFile( currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.post.mac", divtype );
-    } catch(err) {
-        outputAlert(err);
-        postDeleteColorMarkerAll_HmSplitTextFileByRegex();
-    }
-}
 
 try {
+    // ラベルはこのマクロ独自にしておく
+    let strTargetLabel_HmSplitTextFileByRegex = "HmSplitTextFileByRegex";
+
+    const currentmacrodir_HmSplitTextFileByRegex = currentmacrodirectory();
+
     function outputAlert(err) {
         let dll = loaddll("HmOutputPane.dll");
         dll.dllFunc.Output(hidemaru.getCurrentWindowHandle(), err + "\r\n");
@@ -73,6 +42,38 @@ try {
 
     function throwCancelException() {
         throw "実行をキャンセルしました。";
+    }
+
+    function postDeleteColorMarkerAll_HmSplitTextFileByRegex() {
+        // 情報は取得したので検索マーカー全て消す。
+        hidemaru.postExecMacroMemory( "deletecolormarkerall findmarker" );
+    }
+
+    function closeRenderPaneCommand_HmSplitTextFileByRegex() {
+        renderpanecommand({
+            target: strTargetLabel_HmSplitTextFileByRegex,
+            show: 0,
+        });
+    }
+
+
+    // HTML側で「ボタン」を押すと、これが呼ばれる
+    function onInputHtmlButtonClick_HmSplitTextFileByRegex(json_text) {
+        try {
+            hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
+            hidemaru.clearInterval(idIntervalDivideUpdate_HmSplitTextFileByRegex);
+            // レンダーペインコマンドを閉じる
+            closeRenderPaneCommand_HmSplitTextFileByRegex();
+
+            // json_textの状態で、inputフィールドに入っているテキストが渡ってくるので、その数値を渡す
+            let json_obj = JSON.parse(json_text);
+            let divtype = json_obj.divtype;
+            // console.log("divtype" + divtype);
+            hidemaru.postExecMacroFile( currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.post.mac", divtype );
+        } catch(err) {
+            outputAlert(err);
+            postDeleteColorMarkerAll_HmSplitTextFileByRegex();
+        }
     }
 
     // 概ねどのタイプを選んでもこの辺の数値になるんじぁね？ という数値
