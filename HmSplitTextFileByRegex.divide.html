@@ -30,9 +30,9 @@
     let strDivFileCount = "";
 
     // 現在のURLを取得
-    var url = new URL(window.location.href);
+    let url = new URL(window.location.href);
     // パラメータを取得
-    var params = new URLSearchParams(url.search);
+    let params = new URLSearchParams(url.search);
     strDivFileCount = params.get('strDivFileCount');
     let strIDCallBack = params.get('strIDCallBack');
     idCallback = Number(strIDCallBack);
