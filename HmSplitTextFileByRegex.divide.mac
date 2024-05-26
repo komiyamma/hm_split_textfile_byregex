@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.5.9
+ * HmSplitTextFileByRegex v1.0.6.1
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -24,11 +24,10 @@ class HmSplitTextFileByRegexDivideUI {
         HmSplitTextFileByRegexDivideUI.setUpdateInterval();
     }
     _destructor() {
-        HmSplitTextFileByRegexDivideUI.clearResource();
-    }
-    static clearResource() {
         HmSplitTextFileByRegexDivideUI.clearInitializeInterval();
         HmSplitTextFileByRegexDivideUI.clearUpdateInterval();
+    }
+    static clearResource() {
         HmSplitTextFileByRegexDivideUI.closeRenderPane();
         HmSplitTextFileByRegexDivideUI.syncFuncDeleteColorMarker();
     }
@@ -93,6 +92,8 @@ class HmSplitTextFileByRegexDivideUI {
         }
         catch (err) {
             HmSplitTextFileByRegexDivideUI.outputAlert(err);
+            HmSplitTextFileByRegexDivideUI.clearInitializeInterval();
+            HmSplitTextFileByRegexDivideUI.clearUpdateInterval();
             HmSplitTextFileByRegexDivideUI.clearResource();
         }
     }
@@ -136,6 +137,8 @@ class HmSplitTextFileByRegexDivideUI {
     static tickCheckCloseRenderPane() {
         let isShowNow = renderpanecommand({ target: HmSplitTextFileByRegexDivideUI.strTargetLabel, get: "show" });
         if (isShowNow == "0") {
+            HmSplitTextFileByRegexDivideUI.clearInitializeInterval();
+            HmSplitTextFileByRegexDivideUI.clearUpdateInterval();
             HmSplitTextFileByRegexDivideUI.clearResource();
         }
     }
@@ -152,7 +155,7 @@ class HmSplitTextFileByRegexDivideUI {
     }
     static setUpdateInterval() {
         // 全体の行数の変化にはおおらかに対応する。
-        HmSplitTextFileByRegexDivideUI.idIntervalUpdate = hidemaru.setInterval(HmSplitTextFileByRegexDivideUI.tickCheckCloseRenderPane, 2000);
+        HmSplitTextFileByRegexDivideUI.idIntervalUpdate = hidemaru.setInterval(HmSplitTextFileByRegexDivideUI.tickCheckCloseRenderPane, 1000);
     }
     static clearUpdateInterval() {
         if (typeof (HmSplitTextFileByRegexDivideUI.idIntervalUpdate) != "undefined") {
@@ -167,6 +170,7 @@ catch (err) {
     HmSplitTextFileByRegexDivideUI.outputAlert(err);
     if (typeof (objHmSplitTextFileByRegexDivideUI) != "undefined") {
         objHmSplitTextFileByRegexDivideUI._destructor();
+        HmSplitTextFileByRegexDivideUI.clearResource();
     }
 }
 
