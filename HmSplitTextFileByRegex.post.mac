@@ -49,15 +49,25 @@ class HmSplitTextFileByRegexPost {
     }
     // ファイルのフルパスから 「拡張子」と「それ以外」を得る。「拡張子」が無い場合にも対応する
     getFilePathInfo(filePath) {
+        let splitYen = filePath.split('\\');
+        let fileName = splitYen[splitYen.length-1]; // 最後の要素がファイル名
         // '.' でファイル名を拡張子とそれ以外に分割して配列に格納
-        let parts = filePath.split('.');
-        // 拡張子とそれ以外を別々の変数に格納
-        let ext = parts.pop(); // 拡張子
-        let name = parts.join('.'); // 拡張子以外の部分
-        return {
-            name: name,
-            ext: ext
-        };
+        let parts = fileName.split('.');
+        if (parts.length >= 2) {
+            // 拡張子とそれ以外を別々の変数に格納
+	        let ext = parts.pop(); // 拡張子
+            let name = filePath.slice(0, filePath.length-ext.length);
+            return {
+                name: name,
+                ext: ext
+            }
+        } else {
+            let ext = ""; // 拡張子無し
+            return {
+                name: filePath,
+                ext: ext
+            }
+        }
     }
     splitText(items, nDivideType) {
         let chunks = [];
