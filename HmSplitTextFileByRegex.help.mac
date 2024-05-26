@@ -22,58 +22,76 @@ if (filename2 != "" && getarg(0) == "") {
 jsmode "WebView2";
 js {
 
-// 最初のレンダリングペインCompleteチェック用のものは、比較的細やかにチェックする。
-// これは表示しをえたら直ぐにIntervalが止まるのでIntervalが小さくでも大丈夫
-var idIntervalInitialize_HmSplitTextFileByRegex;
-
-// ラベルはこのマクロ独自にしておく
-let strTargetLabel_HmSplitTextFileByRegex = "HmSplitTextFileByRegex";
-
-function showHelp_HmSplitTextFileByRegex() {
-
-    const currentmacrodir = currentmacrodirectory();
-
-    try {
-
-        // レンダリングペインを開く
-        function openRenderPane() {
-            // カレントマクロフォルダのhtmlファイルを使う
-            const absoluteUrl = new URL(currentmacrodir + "\\" + "HmSplitTextFileByRegex.help.html").href;
-
-            const json_arg = {
-                target: strTargetLabel_HmSplitTextFileByRegex,
-                uri: absoluteUrl,
-                show: 1,
-                place: "leftside",
-            };
-
-            renderpanecommand(json_arg);
+if (typeof (objHmSplitTextFileByRegexHelpUI) != "undefined") {
+    objHmSplitTextFileByRegexHelpUI._destructor();
+}
+class HmSplitTextFileByRegexHelpUI {
+    static currentmacrodir = currentmacrodirectory();
+    // ラベルはこのマクロ独自にしておく
+    static strTargetLabel = "HmSplitTextFileByRegex";
+    constructor() {
+        HmSplitTextFileByRegexHelpUI.throwIfNotFileName();
+        HmSplitTextFileByRegexHelpUI.openRenderPane();
+        HmSplitTextFileByRegexHelpUI.setItitializeInterval();
+    }
+    _destructor() {
+        HmSplitTextFileByRegexHelpUI.clearInitializeInterval();
+    }
+    static outputAlert(err) {
+        let dll = loaddll("HmOutputPane.dll");
+        dll.dllFunc.Output(hidemaru.getCurrentWindowHandle(), err + "\r\n");
+    }
+    static throwIfNotFileName() {
+        // ファイル名無しは対象にしない
+        if (!hidemaru.getFileFullPath()) {
+            HmSplitTextFileByRegexHelpUI.outputAlert("ファイル名が付いているファイルのみ対象とします。");
+            HmSplitTextFileByRegexHelpUI.throwCancelException();
         }
-
-        // 本当にレンダリングペインが開いて準備がととのったのかのチェック
-        let checkCount_HmSplitTextFileByRegex = 0;
-        function checkComplete_HmSplitTextFileByRegex() {
-            let readyState = renderpanecommand({ target: strTargetLabel_HmSplitTextFileByRegex, get: "readyState" });
-            if (readyState == "complete") {
-                hidemaru.clearInterval(idIntervalInitialize_HmSplitTextFileByRegex);
-                hidemaru.postExecMacroFile( currentmacrodir + "\\" + "HmSplitTextFileByRegex.prev.mac" );
-            }
+    }
+    static throwCancelException() {
+        throw "実行をキャンセルしました。";
+    }
+    // レンダリングペインを開く
+    static openRenderPane() {
+        // カレントマクロフォルダのhtmlファイルを使う
+        const absoluteUrl = new URL(HmSplitTextFileByRegexHelpUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.help.html").href;
+        const json_arg = {
+            target: HmSplitTextFileByRegexHelpUI.strTargetLabel,
+            uri: absoluteUrl,
+            show: 1,
+            place: "leftside",
+        };
+        renderpanecommand(json_arg);
+    }
+    // 本当にレンダリングペインが開いて準備がととのったのかのチェック
+    static tickCheckComplete() {
+        let readyState = renderpanecommand({ target: HmSplitTextFileByRegexHelpUI.strTargetLabel, get: "readyState" });
+        if (readyState == "complete") {
+            HmSplitTextFileByRegexHelpUI.clearInitializeInterval();
+            hidemaru.postExecMacroFile(HmSplitTextFileByRegexHelpUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.prev.mac");
         }
-
-        openRenderPane();
-
-        // 次のマクロ実行の際に見るのでletではなくvarにして、ライフサイクルを js { } 外に伸ばす必要がある。
-        // 他のjsを使った秀丸マクロと決して被らない「マクロ空間」にしておく必要がある。(よってtickcount空間という被らない空間に配置している)
-        if (typeof (idIntervalInitialize_HmSplitTextFileByRegex) != "undefined") {
-            hidemaru.clearInterval(idIntervalInitialize_HmSplitTextFileByRegex);
+    }
+    static idIntervalInitialize;
+    static idIntervalUpdate;
+    static setItitializeInterval() {
+        // 最初のレンダリングペインCompleteチェック用のものは、比較的細やかにチェックする。
+        HmSplitTextFileByRegexHelpUI.idIntervalInitialize = hidemaru.setInterval(HmSplitTextFileByRegexHelpUI.tickCheckComplete, 300);
+    }
+    static clearInitializeInterval() {
+        if (typeof (HmSplitTextFileByRegexHelpUI.idIntervalInitialize) != "undefined") {
+            hidemaru.clearInterval(HmSplitTextFileByRegexHelpUI.idIntervalInitialize);
         }
-        idIntervalInitialize_HmSplitTextFileByRegex = hidemaru.setInterval(checkComplete_HmSplitTextFileByRegex, 300);
-    } catch(err) {
-        outputAlert(err);
     }
 }
-
-showHelp_HmSplitTextFileByRegex();
+try {
+    var objHmSplitTextFileByRegexHelpUI = new HmSplitTextFileByRegexHelpUI();
+}
+catch (err) {
+    HmSplitTextFileByRegexHelpUI.outputAlert(err);
+    if (typeof (objHmSplitTextFileByRegexHelpUI) != "undefined") {
+        objHmSplitTextFileByRegexHelpUI._destructor();
+    }
+}
 
 } // js
 
