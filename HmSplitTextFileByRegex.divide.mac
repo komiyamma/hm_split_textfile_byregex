@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.5.6
+ * HmSplitTextFileByRegex v1.0.5.9
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -10,84 +10,67 @@ hidemaruversion "9.25.99";
 jsmode "WebView2";
 
 js {
-// 最初のレンダリングペインCompleteチェック用のものは、比較的細やかにチェックする。
-// これは表示しをえたら直ぐにIntervalが止まるのでIntervalが小さくでも大丈夫
-var idIntervalDivideInit_HmSplitTextFileByRegex; // 最初のレンダー表示用
 
-var idIntervalDivideUpdate_HmSplitTextFileByRegex; // 途中閉じてるんじぇね？の監視用
-
-
-try {
+if (typeof (objHmSplitTextFileByRegexDivideUI) != "undefined") {
+    objHmSplitTextFileByRegexDivideUI._destructor();
+}
+class HmSplitTextFileByRegexDivideUI {
     // ラベルはこのマクロ独自にしておく
-    let strTargetLabel_HmSplitTextFileByRegex = "HmSplitTextFileByRegex";
-
-    const currentmacrodir_HmSplitTextFileByRegex = currentmacrodirectory();
-
-    function outputAlert(err) {
+    static strTargetLabel = "HmSplitTextFileByRegex";
+    static currentmacrodir = currentmacrodirectory();
+    constructor() {
+        HmSplitTextFileByRegexDivideUI.openRenderPane();
+        HmSplitTextFileByRegexDivideUI.setItitializeInterval();
+        HmSplitTextFileByRegexDivideUI.setUpdateInterval();
+    }
+    _destructor() {
+        HmSplitTextFileByRegexDivideUI.clearResource();
+    }
+    static clearResource() {
+        HmSplitTextFileByRegexDivideUI.clearInitializeInterval();
+        HmSplitTextFileByRegexDivideUI.clearUpdateInterval();
+        HmSplitTextFileByRegexDivideUI.closeRenderPane();
+        HmSplitTextFileByRegexDivideUI.syncFuncDeleteColorMarker();
+    }
+    static outputAlert(err) {
         let dll = loaddll("HmOutputPane.dll");
         dll.dllFunc.Output(hidemaru.getCurrentWindowHandle(), err + "\r\n");
     }
-
-    function throwIfNotFileName() {
+    static throwIfNotFileName() {
         // ファイル名無しは対象にしない
         if (!hidemaru.getFileFullPath()) {
-            outputAlert("ファイル名が付いているファイルのみ対象とします。");
-            throwCancelException();
+            HmSplitTextFileByRegexDivideUI.outputAlert("ファイル名が付いているファイルのみ対象とします。");
+            HmSplitTextFileByRegexDivideUI.throwCancelException();
         }
     }
-
-    function throwInvalidDivideType() {
-        throw "指定の分割方法は適切な数値ではありません。"
+    static throwInvalidDivideType() {
+        throw "指定の分割方法は適切な数値ではありません。";
     }
-
-    function throwCancelException() {
+    static throwCancelException() {
         throw "実行をキャンセルしました。";
     }
-
-    function postDeleteColorMarkerAll_HmSplitTextFileByRegex() {
+    static syncFuncDeleteColorMarker() {
         // 情報は取得したので検索マーカー全て消す。
-        hidemaru.postExecMacroMemory( "deletecolormarkerall findmarker" );
+        hidemaru.postExecMacroMemory("deletecolormarkerall findmarker");
     }
-
-    function closeRenderPaneCommand_HmSplitTextFileByRegex() {
+    static closeRenderPane() {
         renderpanecommand({
-            target: strTargetLabel_HmSplitTextFileByRegex,
+            target: HmSplitTextFileByRegexDivideUI.strTargetLabel,
             show: 0,
         });
     }
-
-
-    // HTML側で「ボタン」を押すと、これが呼ばれる
-    function onInputHtmlButtonClick_HmSplitTextFileByRegex(json_text) {
-        try {
-            hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
-            hidemaru.clearInterval(idIntervalDivideUpdate_HmSplitTextFileByRegex);
-            // レンダーペインコマンドを閉じる
-            closeRenderPaneCommand_HmSplitTextFileByRegex();
-
-            // json_textの状態で、inputフィールドに入っているテキストが渡ってくるので、その数値を渡す
-            let json_obj = JSON.parse(json_text);
-            let divtype = json_obj.divtype;
-            // console.log("divtype" + divtype);
-            hidemaru.postExecMacroFile( currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.post.mac", divtype );
-        } catch(err) {
-            outputAlert(err);
-            postDeleteColorMarkerAll_HmSplitTextFileByRegex();
-        }
-    }
-
     // 概ねどのタイプを選んでもこの辺の数値になるんじぁね？ という数値
-    function expectedFileCount_HmSplitTextFileByRegex(items) {
+    static expectedFileCount(items) {
         let count = 0;
         let prevCol = 0;
         let prevLine = 1;
-       
         for (let item of items) {
             console.log(`${prevCol}, ${item.col1}, ${prevLine}, ${item.line1}\r\n`);
             // 今の項目の開始地点と、前の項目の最終地点が同じなら、それは空ファイル予定なのでカウントなし
             if (prevCol == item.col1 && prevLine == item.line1) {
                 ;
-            } else {
+            }
+            else {
                 count++;
             }
             prevCol = item.col2;
@@ -95,83 +78,96 @@ try {
         }
         return count;
     }
-
+    // HTML側で「ボタン」を押すと、これが呼ばれる
+    static onHtmlButtonClick(json_text) {
+        try {
+            HmSplitTextFileByRegexDivideUI.clearInitializeInterval();
+            HmSplitTextFileByRegexDivideUI.clearUpdateInterval();
+            // レンダーペインコマンドを閉じる
+            HmSplitTextFileByRegexDivideUI.closeRenderPane();
+            // json_textの状態で、inputフィールドに入っているテキストが渡ってくるので、その数値を渡す
+            let json_obj = JSON.parse(json_text);
+            let divtype = json_obj.divtype;
+            // console.log("divtype" + divtype);
+            hidemaru.postExecMacroFile(HmSplitTextFileByRegexDivideUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.post.mac", divtype);
+        }
+        catch (err) {
+            HmSplitTextFileByRegexDivideUI.outputAlert(err);
+            HmSplitTextFileByRegexDivideUI.clearResource();
+        }
+    }
     // レンダリングペインを開く
-    function openRenderPane_HmSplitTextFileByRegex() {
-
-        let absoluteUrl = new URL(currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.divide.html");
-
-        let nDivFileCount = expectedFileCount_HmSplitTextFileByRegex(gColorMarkerItems_HmSplitTextFileByRegex); // 予測値に使うだけ。
-
+    static openRenderPane() {
+        let absoluteUrl = new URL(HmSplitTextFileByRegexDivideUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.divide.html");
+        let nDivFileCount = HmSplitTextFileByRegexDivideUI.expectedFileCount(gColorMarkerItems_HmSplitTextFileByRegex); // 予測値に使うだけ。
         // カレントマクロフォルダのhtmlファイルを使う
-        let idCallback = hidemaru.getFunctionId(onInputHtmlButtonClick_HmSplitTextFileByRegex);
-
-        let params = {
-            strIDCallBack: idCallback,
-            strDivFileCount: nDivFileCount
-        };
-        absoluteUrl.search = new URLSearchParams(params).toString();
-        absoluteUrl = absoluteUrl.href; // オブジェクトから実際のUrl文字列へ
-
+        let idCallback = hidemaru.getFunctionId(HmSplitTextFileByRegexDivideUI.onHtmlButtonClick);
+        let params = new URLSearchParams();
+        params.set('strIDCallBack', String(idCallback));
+        params.set('strDivFileCount', String(nDivFileCount));
+        absoluteUrl.search = params.toString();
+        let strUrl = absoluteUrl.href; // オブジェクトから実際のUrl文字列へ
         const json_arg = {
-            target: strTargetLabel_HmSplitTextFileByRegex,
-            uri: absoluteUrl,
+            target: HmSplitTextFileByRegexDivideUI.strTargetLabel,
+            uri: strUrl,
             show: 1,
             place: "leftside",
         };
-
         renderpanecommand(json_arg);
     }
-
     // 本当にレンダリングペインが開いて準備がととのったのかのチェック
-    let checkCount_HmSplitTextFileByRegex = 0;
-    function checkComplete_HmSplitTextFileByRegex() {
-        let readyState = renderpanecommand({ target: strTargetLabel_HmSplitTextFileByRegex, get: "readyState" });
+    static tickCheckComplete() {
+        let readyState = renderpanecommand({ target: HmSplitTextFileByRegexDivideUI.strTargetLabel, get: "readyState" });
         if (readyState == "complete") {
-            hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
-            onRenderPaneShown_HmSplitTextFileByRegex();
+            HmSplitTextFileByRegexDivideUI.clearInitializeInterval();
+            HmSplitTextFileByRegexDivideUI.onRenderPaneShown();
         }
     }
-
     // レンダリングペインが完全に表示されたら、
     // このJS内にある「onInputHtmlButtonClick_HmSplitTextFileByRegex」関数をレンダリングペインから呼び出せるように関数のIDを渡す。
     // また、「レンダリングペインを操作するのよ～」ということがわかりやすいように、レンダリングペイン側にフォーカスを移す
-    function onRenderPaneShown_HmSplitTextFileByRegex() {
+    static onRenderPaneShown() {
         renderpanecommand({
-            target: strTargetLabel_HmSplitTextFileByRegex,
+            target: HmSplitTextFileByRegexDivideUI.strTargetLabel,
             focus: 1,
         });
     }
-
-    openRenderPane_HmSplitTextFileByRegex();
-
     // 途中で閉じちゃってたら、終了
-    function updateTextInfo_HmSplitTextFileByLine() {
-        let isShowNow = renderpanecommand({ target: strTargetLabel_HmSplitTextFileByRegex, get: "show" });
+    static tickCheckCloseRenderPane() {
+        let isShowNow = renderpanecommand({ target: HmSplitTextFileByRegexDivideUI.strTargetLabel, get: "show" });
         if (isShowNow == "0") {
-            hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
-            hidemaru.clearInterval(idIntervalDivideUpdate_HmSplitTextFileByRegex);
-            postDeleteColorMarkerAll_HmSplitTextFileByRegex();
+            HmSplitTextFileByRegexDivideUI.clearResource();
         }
     }
-
-    // 次のマクロ実行の際に見るのでletではなくvarにして、ライフサイクルを js { } 外に伸ばす必要がある。
-    // 他のjsを使った秀丸マクロと決して被らない「マクロ空間」にしておく必要がある。(よってtickcount空間という被らない空間に配置している)
-    if (typeof (idIntervalDivideInit_HmSplitTextFileByRegex) != "undefined") {
-        hidemaru.clearInterval(idIntervalDivideInit_HmSplitTextFileByRegex);
+    static idIntervalInitialize;
+    static idIntervalUpdate;
+    static setItitializeInterval() {
+        // 最初のレンダリングペインCompleteチェック用のものは、比較的細やかにチェックする。
+        HmSplitTextFileByRegexDivideUI.idIntervalInitialize = hidemaru.setInterval(HmSplitTextFileByRegexDivideUI.tickCheckComplete, 300);
     }
-    idIntervalDivideInit_HmSplitTextFileByRegex = hidemaru.setInterval(checkComplete_HmSplitTextFileByRegex, 300);
-
-    // 途中で閉じちゃってるんじゃね？という監視用。閉じたらキャンセルの意思とみなす。
-    if (typeof (idIntervalDivideUpdate_HmSplitTextFileByRegex) != "undefined") {
-        hidemaru.clearInterval(idIntervalDivideUpdate_HmSplitTextFileByRegex);
+    static clearInitializeInterval() {
+        if (typeof (HmSplitTextFileByRegexDivideUI.idIntervalInitialize) != "undefined") {
+            hidemaru.clearInterval(HmSplitTextFileByRegexDivideUI.idIntervalInitialize);
+        }
     }
-    idIntervalDivideUpdate_HmSplitTextFileByRegex = hidemaru.setInterval(updateTextInfo_HmSplitTextFileByLine, 1000);
-
-} catch(err) {
-    outputAlert(err);
-    closeRenderPaneCommand_HmSplitTextFileByRegex();
-    postDeleteColorMarkerAll_HmSplitTextFileByRegex();
+    static setUpdateInterval() {
+        // 全体の行数の変化にはおおらかに対応する。
+        HmSplitTextFileByRegexDivideUI.idIntervalUpdate = hidemaru.setInterval(HmSplitTextFileByRegexDivideUI.tickCheckCloseRenderPane, 2000);
+    }
+    static clearUpdateInterval() {
+        if (typeof (HmSplitTextFileByRegexDivideUI.idIntervalUpdate) != "undefined") {
+            hidemaru.clearInterval(HmSplitTextFileByRegexDivideUI.idIntervalUpdate);
+        }
+    }
+}
+try {
+    var objHmSplitTextFileByRegexDivideUI = new HmSplitTextFileByRegexDivideUI();
+}
+catch (err) {
+    HmSplitTextFileByRegexDivideUI.outputAlert(err);
+    if (typeof (objHmSplitTextFileByRegexDivideUI) != "undefined") {
+        objHmSplitTextFileByRegexDivideUI._destructor();
+    }
 }
 
 
