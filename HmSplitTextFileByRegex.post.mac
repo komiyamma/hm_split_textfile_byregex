@@ -149,7 +149,7 @@ function postProcedure_HmSplitTextFileByRegex(nDivideType) {
     try {
 
         // テキストを分割して配列に格納
-        const chunks = splitText(gColorMarkerItems, nDivideType);
+        const chunks = splitText(gColorMarkerItems_HmSplitTextFileByRegex, nDivideType);
 
         // 分割したテキストを分割してファイルに保存
         saveChunksToFiles(chunks);

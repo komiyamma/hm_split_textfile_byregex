@@ -101,7 +101,7 @@ try {
 
         let absoluteUrl = new URL(currentmacrodir_HmSplitTextFileByRegex + "\\" + "HmSplitTextFileByRegex.divide.html");
 
-        let nDivFileCount = expectedFileCount_HmSplitTextFileByRegex(gColorMarkerItems); // 予測値に使うだけ。
+        let nDivFileCount = expectedFileCount_HmSplitTextFileByRegex(gColorMarkerItems_HmSplitTextFileByRegex); // 予測値に使うだけ。
 
         // カレントマクロフォルダのhtmlファイルを使う
         let idCallback = hidemaru.getFunctionId(onInputHtmlButtonClick_HmSplitTextFileByRegex);

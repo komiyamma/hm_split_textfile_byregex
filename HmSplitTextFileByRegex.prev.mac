@@ -12,42 +12,54 @@ setcompatiblemode 0x00020000; // ユーザーが利用する普段の検索条�
 jsmode "WebView2";
 
 js {
+var gColorMarkerItems_HmSplitTextFileByRegex = []; // サイズが大きくなる可能性があるので、引数ではなくグローバルで伝搬させるので、ここに。
 
-try {
-    function outputAlert(err) {
+class HmSplitTextFileByRegexPrev {
+    constructor() {
+        HmSplitTextFileByRegexPrev.throwIfNotFileName();
+        // 何行に分割するかを得る
+        gColorMarkerItems_HmSplitTextFileByRegex = this.getPerChunk();
+        // マクロ引数が直接渡されてるいるようならUIは不要
+        if (getarg(0) != "") {
+            let json_text = getarg(0);
+            let json_obj = JSON.parse(json_text);
+            let divtype = json_obj.nDivisionType;
+            hidemaru.postExecMacroFile(currentmacrodirectory() + "\\" + "HmSplitTextFileByRegex.post.mac", divtype);
+        }
+        else {
+            hidemaru.postExecMacroFile(currentmacrodirectory() + "\\" + "HmSplitTextFileByRegex.divide.mac");
+        }
+    }
+    _destructor() {
+        HmSplitTextFileByRegexPrev.closeRenderPane();
+    }
+    static outputAlert(err) {
         let dll = loaddll("HmOutputPane.dll");
         dll.dllFunc.Output(hidemaru.getCurrentWindowHandle(), err + "\r\n");
     }
-
-    function throwIfNotFileName() {
+    static throwIfNotFileName() {
         // ファイル名無しは対象にしない
         if (!hidemaru.getFileFullPath()) {
-            outputAlert("ファイル名が付いているファイルのみ対象とします。");
-            throwCancelException();
+            HmSplitTextFileByRegexPrev.outputAlert("ファイル名が付いているファイルのみ対象とします。");
+            HmSplitTextFileByRegexPrev.throwCancelException();
         }
     }
-
-    function throwInvalidDivideType() {
-        throw "指定の分割方法は適切な数値ではありません。"
+    static throwInvalidDivideType() {
+        throw "指定の分割方法は適切な数値ではありません。";
     }
-
-    function throwCancelException() {
+    static throwCancelException() {
         throw "実行をキャンセルしました。";
     }
-
-    function closeRenderPaneCommand_HmSplitTextFileByRegex() {
-        // ラベルはこのマクロ独自にしておく
-        let strTargetLabel = "HmSplitTextFileByRegex";
+    // ラベルはこのマクロ独自にしておく
+    static strTargetLabel = "HmSplitTextFileByRegex";
+    static closeRenderPane() {
         renderpanecommand({
-            target: strTargetLabel,
+            target: HmSplitTextFileByRegexPrev.strTargetLabel,
             show: 0,
         });
     }
-
-    function getPerChunk() {
-
-        let answer = ""
-
+    getPerChunk() {
+        let answer = "";
         // このマクロが引数付で呼ばれているならば
         if (getarg(0) != "") {
             // このマクロの引数として行数が指定されている。
@@ -55,9 +67,7 @@ try {
             let json_obj = JSON.parse(json_text);
             answer = json_obj.strSearchRegexp;
         }
-
         deletecolormarkerall(findmarker());
-
         let selectedText = hidemaru.getSelectedText();
         if (!selectedText) {
             selectedText = "分離したい箇所の「単語」や「正規表現」を入力";
@@ -70,20 +80,24 @@ try {
         const op_regular = 0x00000010; // 秀丸のsearchdown関数のregularと同じ意味
         const op_hilight = 0x00003800; // 秀丸のsearchdown関数のhilightと同じ意味
         const op_loop = 0x01000000; // 秀丸のsearchdown関数のloopと同じ意味
-
         // 指定がないなら視覚的にもダイアログを出す
         if (answer == "") {
             let success = searchdialog(selectedText, op_regular | op_hilight | op_casesense | op_loop);
-            if (!success) { throw "検索に失敗しました"; }
-            if (success==-2) { throwCancelException(); }
-
-        // 指定があるなら視覚的には出さない
-        } else {
+            if (!success) {
+                throw "検索に失敗しました";
+            }
+            if (success == -2) {
+                HmSplitTextFileByRegexPrev.throwCancelException();
+            } // ダイアログをキャンセルした。
+            // 指定があるなら視覚的には出さない
+        }
+        else {
             let success = searchdown(answer, op_regular | op_hilight | op_casesense | op_loop);
-            if (!success) { throw "検索に失敗しました"; }
+            if (!success) {
+                throw "検索に失敗しました";
+            }
         }
         colormarkerallfound();
-
         let getcolormarker_arg_request_json = {
             unit: "wcs",
             layer: findmarker(),
@@ -91,40 +105,25 @@ try {
                 { line1: "*", col1: "*", line2: "*", col2: "*", },
             ]
         };
-
         let info = getcolormarker(getcolormarker_arg_request_json);
         if (info.items) {
             let items = info.items;
             return items;
-        } else {
+        }
+        else {
             // 情報は取得したので検索マーカー全て消す。
             deletecolormarkerall(findmarker());
             throw "分離情報取得でエラーが発生しました。";
         }
     }
+}
 
-    function main() {
-
-        throwIfNotFileName();
-
-        // 何行に分割するかを得る
-        gColorMarkerItems = getPerChunk();
-        // マクロ引数が直接渡されてるいるようならUIは不要
-        if (getarg(0) != "") {
-            let json_text = getarg(0);
-            let json_obj = JSON.parse(json_text);
-            let divtype = json_obj.nDivisionType;
-            hidemaru.postExecMacroFile( currentmacrodirectory() + "\\" + "HmSplitTextFileByRegex.post.mac", divtype );
-        } else {
-            hidemaru.postExecMacroFile( currentmacrodirectory() + "\\" + "HmSplitTextFileByRegex.divide.mac" );
-        }
-    }
-
-    main()
-
-} catch (err) {
-    outputAlert(err);
-    closeRenderPaneCommand_HmSplitTextFileByRegex();
+try {
+    let objHmSplitTextFileByRegexPrev = new HmSplitTextFileByRegexPrev();
+}
+catch (err) {
+    HmSplitTextFileByRegexPrev.outputAlert(err);
+    HmSplitTextFileByRegexPrev.closeRenderPane();
 }
 
 } // js
