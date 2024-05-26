@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.6.1
+ * HmSplitTextFileByRegex v1.0.6.2
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -9,7 +9,7 @@ hidemaruversion "9.25.99";
 
 setcompatiblemode 0x00020000; // ユーザーが利用する普段の検索条件を保存しておき、このマクロ終了後に元へと戻す。
 
-jsmode "WebView2";
+jsmode "WebView2\\HmSplitTextFileByRegex";
 
 js {
 var gColorMarkerItems_HmSplitTextFileByRegex = []; // サイズが大きくなる可能性があるので、引数ではなくグローバルで伝搬させるので、ここに。

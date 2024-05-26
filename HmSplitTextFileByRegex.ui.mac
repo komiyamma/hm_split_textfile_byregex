@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.6.1
+ * HmSplitTextFileByRegex v1.0.6.2
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -7,7 +7,7 @@
 
 hidemaruversion "9.25.99";
 
-jsmode "WebView2";
+jsmode "WebView2\\HmSplitTextFileByRegex";
 js {
     hidemaru.postExecMacroFile( currentmacrodirectory() + "\\" + "HmSplitTextFileByRegex.help.mac" );
 }
