@@ -11,9 +11,7 @@ jsmode "WebView2\\HmSplitTextFileByRegex";
 
 js {
 
-if (typeof (objHmSplitTextFileByRegexDivideUI) != "undefined") {
-    objHmSplitTextFileByRegexDivideUI._destructor();
-}
+objHmSplitTextFileByRegexDivideUI?._destructor();
 class HmSplitTextFileByRegexDivideUI {
     // ラベルはこのマクロ独自にしておく
     static strTargetLabel = "HmSplitTextFileByRegex";
@@ -170,10 +168,8 @@ try {
 }
 catch (err) {
     HmSplitTextFileByRegexDivideUI.outputAlert(err);
-    if (typeof (objHmSplitTextFileByRegexDivideUI) != "undefined") {
-        objHmSplitTextFileByRegexDivideUI._destructor();
-        HmSplitTextFileByRegexDivideUI.clearResource();
-    }
+    objHmSplitTextFileByRegexDivideUI?._destructor();
+    HmSplitTextFileByRegexDivideUI.clearResource();
 }
 
 
