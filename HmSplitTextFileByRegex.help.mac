@@ -11,9 +11,7 @@ hidemaruversion "9.25.99";
 jsmode "WebView2\\HmSplitTextFileByRegex";
 js {
 
-if (typeof (objHmSplitTextFileByRegexHelpUI) != "undefined") {
-    objHmSplitTextFileByRegexHelpUI._destructor();
-}
+objHmSplitTextFileByRegexHelpUI?._destructor();
 class HmSplitTextFileByRegexHelpUI {
     static currentmacrodir = currentmacrodirectory();
     // ラベルはこのマクロ独自にしておく
@@ -79,9 +77,7 @@ try {
 }
 catch (err) {
     HmSplitTextFileByRegexHelpUI.outputAlert(err);
-    if (typeof (objHmSplitTextFileByRegexHelpUI) != "undefined") {
-        objHmSplitTextFileByRegexHelpUI._destructor();
-    }
+    objHmSplitTextFileByRegexHelpUI?._destructor();
 }
 
 } // js
