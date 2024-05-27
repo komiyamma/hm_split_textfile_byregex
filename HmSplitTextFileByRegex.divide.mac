@@ -20,7 +20,7 @@ class HmSplitTextFileByRegexDivideUI {
     static currentmacrodir = currentmacrodirectory();
     constructor() {
         HmSplitTextFileByRegexDivideUI.openRenderPane();
-        HmSplitTextFileByRegexDivideUI.setItitializeInterval();
+        HmSplitTextFileByRegexDivideUI.setInitializeInterval();
         HmSplitTextFileByRegexDivideUI.setUpdateInterval();
     }
     _destructor() {
@@ -146,7 +146,7 @@ class HmSplitTextFileByRegexDivideUI {
     }
     static idIntervalInitialize;
     static idIntervalUpdate;
-    static setItitializeInterval() {
+    static setInitializeInterval() {
         // 最初のレンダリングペインCompleteチェック用のものは、比較的細やかにチェックする。
         HmSplitTextFileByRegexDivideUI.idIntervalInitialize = hidemaru.setInterval(HmSplitTextFileByRegexDivideUI.tickCheckComplete, 300);
     }

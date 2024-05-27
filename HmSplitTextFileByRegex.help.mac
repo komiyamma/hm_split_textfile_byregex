@@ -21,7 +21,7 @@ class HmSplitTextFileByRegexHelpUI {
     constructor() {
         HmSplitTextFileByRegexHelpUI.throwIfNotFileName();
         HmSplitTextFileByRegexHelpUI.openRenderPane();
-        HmSplitTextFileByRegexHelpUI.setItitializeInterval();
+        HmSplitTextFileByRegexHelpUI.setInitializeInterval();
     }
     _destructor() {
         HmSplitTextFileByRegexHelpUI.clearInitializeInterval();
@@ -64,7 +64,7 @@ class HmSplitTextFileByRegexHelpUI {
     }
     static idIntervalInitialize;
     static idIntervalUpdate;
-    static setItitializeInterval() {
+    static setInitializeInterval() {
         // 最初のレンダリングペインCompleteチェック用のものは、比較的細やかにチェックする。
         HmSplitTextFileByRegexHelpUI.idIntervalInitialize = hidemaru.setInterval(HmSplitTextFileByRegexHelpUI.tickCheckComplete, 300);
     }
