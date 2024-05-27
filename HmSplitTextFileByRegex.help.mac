@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.6.3
+ * HmSplitTextFileByRegex v1.0.6.4
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -7,19 +7,6 @@
 
 hidemaruversion "9.25.99";
 
-// これを「秀丸マクロの層」で入れて表示だけでもしておかないと、JSからキックしたら１秒ほど遅くなってしまう。
-// NeedConfirm(=マクロ引数が無い)である時だけ出す。ここで記述したくはないがあまりにも速度が違うので仕方がない。
-if (filename2 != "" && getarg(0) == "") {
-    renderpanecommand
-    """"""""""""""""""""""""""""""""""""""""
-    {
-        "target": "HmSplitTextFileByRegex",
-        "show": 1,
-        "place": "leftside",
-        "size": 240
-    }
-    """""""""""""""""""""""""""""""""""""""";
-}
 
 jsmode "WebView2\\HmSplitTextFileByRegex";
 js {
@@ -63,6 +50,7 @@ class HmSplitTextFileByRegexHelpUI {
             show: 1,
             place: "leftside",
             size: 240,
+            initialize: "async",
         };
         renderpanecommand(json_arg);
     }

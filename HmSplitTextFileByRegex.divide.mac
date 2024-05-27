@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.6.3
+ * HmSplitTextFileByRegex v1.0.6.4
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -114,6 +114,7 @@ class HmSplitTextFileByRegexDivideUI {
             show: 1,
             place: "leftside",
             size: 240,
+            initialize: "async",
         };
         renderpanecommand(json_arg);
     }
