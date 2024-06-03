@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <head>
     <title>HmSplitTextFileByRegex</title>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #223;
-                color: #ddd;
-            }
-        }
-    </style>
 </head>
 <body>
 「分割キーワード」を検索ダイアログで「協調表示」させ、「下検索」して下さい。<br>

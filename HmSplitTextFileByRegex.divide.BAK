@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <head>
     <title>HmSplitTextFileByRegex</title>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #223;
-                color: #ddd;
-            }
-        }
-    </style>
 </head>
 <body>
 <div id="button_list">
