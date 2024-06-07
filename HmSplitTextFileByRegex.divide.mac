@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.6.5
+ * HmSplitTextFileByRegex v1.0.6.6
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -48,7 +48,12 @@ class HmSplitTextFileByRegexDivideUI {
     }
     static syncFuncDeleteColorMarker() {
         // 情報は取得したので検索マーカー全て消す。
-        hidemaru.postExecMacroMemory("deletecolormarkerall findmarker");
+        let peRetry = hidemaru.setInterval(()=>{
+            if (hidemaru.isScheduled?.()) return;
+            let success = hidemaru.postExecMacroMemory("deletecolormarkerall findmarker");
+            if (success === 0) return; // 再挑戦
+            hidemaru.clearInterval(peRetry);
+        }, 100);
     }
     static closeRenderPane() {
         renderpanecommand({
@@ -86,7 +91,12 @@ class HmSplitTextFileByRegexDivideUI {
             let json_obj = JSON.parse(json_text);
             let divtype = json_obj.divtype;
             // console.log("divtype" + divtype);
-            hidemaru.postExecMacroFile(HmSplitTextFileByRegexDivideUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.post.mac", divtype);
+            let peRetry = hidemaru.setInterval(()=>{
+                if (hidemaru.isScheduled?.()) return;
+                let success = hidemaru.postExecMacroFile(HmSplitTextFileByRegexDivideUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.post.mac", divtype);
+                if (success === 0) return; // 再挑戦
+                hidemaru.clearInterval(peRetry);
+            }, 100);
         }
         catch (err) {
             HmSplitTextFileByRegexDivideUI.outputAlert(err);

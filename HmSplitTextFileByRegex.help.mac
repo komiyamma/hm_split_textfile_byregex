@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.6.5
+ * HmSplitTextFileByRegex v1.0.6.6
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -57,7 +57,12 @@ class HmSplitTextFileByRegexHelpUI {
         let readyState = renderpanecommand({ target: HmSplitTextFileByRegexHelpUI.strTargetLabel, get: "readyState" });
         if (readyState == "complete") {
             HmSplitTextFileByRegexHelpUI.clearInitializeInterval();
-            hidemaru.postExecMacroFile(HmSplitTextFileByRegexHelpUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.prev.mac");
+            let peRetry = hidemaru.setInterval(()=>{
+                if (hidemaru.isScheduled?.()) return;
+                let success = hidemaru.postExecMacroFile(HmSplitTextFileByRegexHelpUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.prev.mac");
+                if (success === 0) return; // 再挑戦
+                hidemaru.clearInterval(peRetry);
+            }, 100);
         }
     }
     static idIntervalInitialize;
