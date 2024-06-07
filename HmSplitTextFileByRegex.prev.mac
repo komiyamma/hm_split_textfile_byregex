@@ -19,15 +19,28 @@ class HmSplitTextFileByRegexPrev {
         HmSplitTextFileByRegexPrev.throwIfNotFileName();
         // 何行に分割するかを得る
         gColorMarkerItems_HmSplitTextFileByRegex = this.getPerChunk();
+
+        let curmacdir = currentmacrodirectory();
+
         // マクロ引数が直接渡されてるいるようならUIは不要
         if (getarg(0) != "") {
             let json_text = getarg(0);
             let json_obj = JSON.parse(json_text);
             let divtype = json_obj.nDivisionType;
-            hidemaru.postExecMacroFile(currentmacrodirectory() + "\\" + "HmSplitTextFileByRegex.post.mac", divtype);
+            let peRetry = hidemaru.setInterval(()=>{
+                if (hidemaru.isScheduled?.()) return;
+                let success = hidemaru.postExecMacroFile(curmacdir + "\\" + "HmSplitTextFileByRegex.post.mac", divtype);
+                if (success === 0) return; // 再挑戦
+                hidemaru.clearInterval(peRetry);
+            }, 100);
         }
         else {
-            hidemaru.postExecMacroFile(currentmacrodirectory() + "\\" + "HmSplitTextFileByRegex.divide.mac");
+            let peRetry = hidemaru.setInterval(()=>{
+                if (hidemaru.isScheduled?.()) return;
+                let success = hidemaru.postExecMacroFile(curmacdir + "\\" + "HmSplitTextFileByRegex.divide.mac");
+                if (success === 0) return; // 再挑戦
+                hidemaru.clearInterval(peRetry);
+            }, 100);
         }
     }
     _destructor() {
