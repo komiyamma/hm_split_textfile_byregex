@@ -59,8 +59,8 @@ class HmSplitTextFileByRegexHelpUI {
             HmSplitTextFileByRegexHelpUI.clearInitializeInterval();
             let peRetry = hidemaru.setInterval(()=>{
                 if (hidemaru.isScheduled?.()) return;
-                let success = hidemaru.postExecMacroFile(HmSplitTextFileByRegexHelpUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.prev.mac");
-                if (success === 0) return; // 再挑戦
+                let isScheduled = hidemaru.postExecMacroFile(HmSplitTextFileByRegexHelpUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.prev.mac");
+                if (isScheduled === 0) return; // 再挑戦
                 hidemaru.clearInterval(peRetry);
             }, 100);
         }

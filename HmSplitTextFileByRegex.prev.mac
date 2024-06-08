@@ -29,16 +29,16 @@ class HmSplitTextFileByRegexPrev {
             let divtype = json_obj.nDivisionType;
             let peRetry = hidemaru.setInterval(()=>{
                 if (hidemaru.isScheduled?.()) return;
-                let success = hidemaru.postExecMacroFile(curmacdir + "\\" + "HmSplitTextFileByRegex.post.mac", divtype);
-                if (success === 0) return; // 再挑戦
+                let isScheduled = hidemaru.postExecMacroFile(curmacdir + "\\" + "HmSplitTextFileByRegex.post.mac", divtype);
+                if (isScheduled === 0) return; // 再挑戦
                 hidemaru.clearInterval(peRetry);
             }, 100);
         }
         else {
             let peRetry = hidemaru.setInterval(()=>{
                 if (hidemaru.isScheduled?.()) return;
-                let success = hidemaru.postExecMacroFile(curmacdir + "\\" + "HmSplitTextFileByRegex.divide.mac");
-                if (success === 0) return; // 再挑戦
+                let isScheduled = hidemaru.postExecMacroFile(curmacdir + "\\" + "HmSplitTextFileByRegex.divide.mac");
+                if (isScheduled === 0) return; // 再挑戦
                 hidemaru.clearInterval(peRetry);
             }, 100);
         }
