@@ -28,7 +28,6 @@ class HmSplitTextFileByRegexPrev {
             let json_obj = JSON.parse(json_text);
             let divtype = json_obj.nDivisionType;
             let peRetry = hidemaru.setInterval(()=>{
-                if (hidemaru.isScheduled?.()) return;
                 let isScheduled = hidemaru.postExecMacroFile(curmacdir + "\\" + "HmSplitTextFileByRegex.post.mac", divtype);
                 if (isScheduled === 0) return; // 再挑戦
                 hidemaru.clearInterval(peRetry);
@@ -36,7 +35,6 @@ class HmSplitTextFileByRegexPrev {
         }
         else {
             let peRetry = hidemaru.setInterval(()=>{
-                if (hidemaru.isScheduled?.()) return;
                 let isScheduled = hidemaru.postExecMacroFile(curmacdir + "\\" + "HmSplitTextFileByRegex.divide.mac");
                 if (isScheduled === 0) return; // 再挑戦
                 hidemaru.clearInterval(peRetry);
