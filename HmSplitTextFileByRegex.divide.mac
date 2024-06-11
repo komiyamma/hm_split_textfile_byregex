@@ -49,9 +49,8 @@ class HmSplitTextFileByRegexDivideUI {
     static syncFuncDeleteColorMarker() {
         // 情報は取得したので検索マーカー全て消す。
         let peRetry = hidemaru.setInterval(()=>{
-            let isScheduled = hidemaru.postExecMacroMemory("deletecolormarkerall findmarker");
-            if (isScheduled === 0) return; // 再挑戦
-            hidemaru.clearInterval(peRetry);
+            let isScheduled = hidemaru.postExecMacroMemory("deletecolormarkerall findmarker") ?? 1;
+            if (isScheduled) { hidemaru.clearInterval(peRetry); }
         }, 100);
     }
     static closeRenderPane() {
@@ -91,9 +90,8 @@ class HmSplitTextFileByRegexDivideUI {
             let divtype = json_obj.divtype;
             // console.log("divtype" + divtype);
             let peRetry = hidemaru.setInterval(()=>{
-                let isScheduled = hidemaru.postExecMacroFile(HmSplitTextFileByRegexDivideUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.post.mac", divtype);
-                if (isScheduled === 0) return; // 再挑戦
-                hidemaru.clearInterval(peRetry);
+                let isScheduled = hidemaru.postExecMacroFile(HmSplitTextFileByRegexDivideUI.currentmacrodir + "\\" + "HmSplitTextFileByRegex.post.mac", divtype) ?? 1;
+                if (isScheduled) { hidemaru.clearInterval(peRetry); }
             }, 100);
         }
         catch (err) {
