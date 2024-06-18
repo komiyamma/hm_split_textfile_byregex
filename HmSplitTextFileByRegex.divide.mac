@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.6.7
+ * HmSplitTextFileByRegex v1.0.6.8
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -65,7 +65,7 @@ class HmSplitTextFileByRegexDivideUI {
         let prevCol = 0;
         let prevLine = 1;
         for (let item of items) {
-            console.log(`${prevCol}, ${item.col1}, ${prevLine}, ${item.line1}\r\n`);
+            // console.log(`${prevCol}, ${item.col1}, ${prevLine}, ${item.line1}\r\n`);
             // 今の項目の開始地点と、前の項目の最終地点が同じなら、それは空ファイル予定なのでカウントなし
             if (prevCol == item.col1 && prevLine == item.line1) {
                 ;
