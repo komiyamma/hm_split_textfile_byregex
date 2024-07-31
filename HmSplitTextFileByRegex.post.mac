@@ -55,7 +55,7 @@ class HmSplitTextFileByRegexPost {
         let parts = fileName.split('.');
         if (parts.length >= 2) {
             // 拡張子とそれ以外を別々の変数に格納
-	        let ext = parts.pop(); // 拡張子
+            let ext = parts.pop(); // 拡張子
             let name = filePath.slice(0, filePath.length-ext.length);
             return {
                 name: name,
