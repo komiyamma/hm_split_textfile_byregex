@@ -1,5 +1,5 @@
 ﻿/*
- * HmSplitTextFileByRegex v1.0.7.0
+ * HmSplitTextFileByRegex v1.0.7.1
  *
  * Copyright (c) 2024 Akitsugu Komiyama
  * under the MIT License
@@ -49,23 +49,26 @@ class HmSplitTextFileByRegexPost {
     }
     // ファイルのフルパスから 「拡張子」と「それ以外」を得る。「拡張子」が無い場合にも対応する
     getFilePathInfo(filePath) {
-        let splitYen = filePath.split('\\');
-        let fileName = splitYen[splitYen.length-1]; // 最後の要素がファイル名
-        // '.' でファイル名を拡張子とそれ以外に分割して配列に格納
-        let parts = fileName.split('.');
-        if (parts.length >= 2) {
-            // 拡張子とそれ以外を別々の変数に格納
-            let ext = parts.pop(); // 拡張子
-            let name = filePath.slice(0, filePath.length-ext.length-1);
+        let fso = createobject("Scripting.FileSystemObject");
+
+        // ディレクトリを取得
+        let directoryPath = fso.GetParentFolderName(filePath);
+
+        // ベースファイル名を取得
+        let baseFileName = fso.GetBaseName(filePath);
+
+        // ファイル拡張子を取得
+        let fileExtension = fso.GetExtensionName(filePath);
+
+        if (fileExtension.length > 0) {
             return {
-                name: name,
-                ext: ext
+                name: directoryPath + "\\" + baseFileName,
+                ext: "." + fileExtension
             }
         } else {
-            let ext = ""; // 拡張子無し
             return {
-                name: filePath,
-                ext: ext
+                name: directoryPath + "\\" + baseFileName,
+                ext: ""
             }
         }
     }
@@ -132,7 +135,7 @@ class HmSplitTextFileByRegexPost {
             // 現在の数値が3なら3を文字列化して足りない文字数すなわち1つが0で埋まる
             const zeroFormatNumber = (i + 1).toString().padStart(maxFormatLength, '0');
             // ファイル名を新たに分割したファイル名に
-            let newFileName = `${pathAttr.name}_${zeroFormatNumber}.${pathAttr.ext}`;
+            let newFileName = `${pathAttr.name}_${zeroFormatNumber}${pathAttr.ext}`;
             hidemaru.saveTextFile(newFileName, chunks[i], enc);
         }
     }
