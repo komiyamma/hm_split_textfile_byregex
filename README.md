@@ -21,3 +21,7 @@ HmSplitTextFileByRegex.ui.mac を 実行する。
 ### HmSplitTextFileByRegex.value.mac
 
 UIなしで直接値で指示する時はこれを編集して自分なりに利用してください。
+
+## 解説サイト
+
+https://秀丸マクロ.net/?page=nobu_tool_hm_split_textfile_byregex
