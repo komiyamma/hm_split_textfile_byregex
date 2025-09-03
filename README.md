@@ -50,7 +50,6 @@
 
 このマクロは [MIT License](LICENSE) の下で公開されています。
 
-## 作者・ソースコード
+## 解説サイト
 
--   **解説サイト**: [秀丸マクロ.net](https://秀丸マクロ.net/?page=nobu_tool_hm_split_textfile_byregex)
--   **ソースコード**: [GitHub - komiyamma/hm_split_textfile_byregex](https://github.com/komiyamma/hm_split_textfile_byregex)
+[https://秀丸マクロ.net/?page=nobu_tool_hm_split_textfile_byregex](https://秀丸マクロ.net/?page=nobu_tool_hm_split_textfile_byregex)
